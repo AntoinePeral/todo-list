@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const router = require('./app/router');
+const errors = require ('./app/modules/errors')
 
 const app = express();
 const port = process.env.PORT;
@@ -24,12 +25,7 @@ app.use(mutipartParser.none());
 
 app.use(router);
 
-app.use((req, res)=> {
-    res.status(400).json({
-    statusCode: 400,
-    message: "Bad request"
-  });
-})
+app.use(errors.error404)
 
 app.listen(port, () => {
   console.log(`API demarrée sur http://localhost:${port}`);

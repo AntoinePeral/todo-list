@@ -1,4 +1,5 @@
 const { Task } = require('../models');
+const errors = require ('../modules/errors')
 
 const taskController = {
 
@@ -14,6 +15,10 @@ const taskController = {
         console.log(name);
         console.log(req.body);
 
+        if(typeof name != 'string' || name.length < 2) {
+            errors.error400(res)
+        }
+
         try {
             // On crée un nouveau model en ajoutant la donnée récup
             const task  = await Task.create({name});
@@ -21,11 +26,7 @@ const taskController = {
             res.json(task)
 
         } catch (err) {
-            res.status(500).json({
-                statusCode: 500,
-                message: "Server error",
-                fullErrorMessage: err
-            })
+            errors.error500(res, err)
         }
     },
     updateTask: async function (req,res) {
@@ -49,33 +50,30 @@ const taskController = {
             res.json(task)
 
         } catch (err) {
-            res.status(500).json({
-                statusCode: 500,
-                message: "Server error",
-                fullErrorMessage: err
-            })
+            errors.error500(res, err)
         }
 
     },
     deleteTask: async function (req,res, next) {
+        // On récup l'id de la tâche
         const taskId = Number(req.params.id);
 
         try {
+            // On récupère la tâche par l'id
             const task = await Task.findByPk(taskId);
 
+            // Si on ne la trouve pas on retourne une 404
             if (!task) {
                 return next()
             }
 
+            // On détruit la task sélectionner
             await task.destroy()
+            // On renvoie la 204 ("No-content") dans le header
             res.status(204).json({statusCode: 204})
-            
+            // Si erreur serveur
         } catch (err) {
-            res.status(500).json({
-                statusCode: 500,
-                message: "Server error",
-                fullErrorMessage: err
-            })
+            errors.error500(res, err)
         }
     },
     

@@ -116,6 +116,28 @@ const taskManager = {
         // On supprime l'élément dans la page HTML
         taskHtmlElement.remove()
 
+        // On rajoute une notifcation de succès en cas de suppression
+        // On crée la div qui va contenir la notif et on lui rajoute le text et sa classe
+        const divNotif = document.createElement('div');
+        divNotif.classList.add('notification');
+        divNotif.classList.add('is-light');
+        divNotif.classList.add('is-info');
+        divNotif.innerHTML = `La tâche numéro ${taskId} a bien été supprimé`
+        // On lui crée un btn pour pouvoir fermer la notif
+        const btnClose = document.createElement('button');
+        btnClose.classList.add('delete')
+        // On l'ajoute à la notif
+        divNotif.append(btnClose)
+        // On ajoute la fonction de fermer la notif
+        btnClose.addEventListener('click', taskManager.handleCloseBtn)
+        // On ajoute le tout au container de tasks en premier 
+        document.querySelector('.tasks').prepend(divNotif)
+
+
+    },
+    handleCloseBtn:function (event) {
+        event.target.closest('.notification').remove();
+
     },
 
     /**
