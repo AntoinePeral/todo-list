@@ -7,7 +7,8 @@ const taskManager = {
      */
     fetchAndInsertTasksFromApi: async function (event) {
 
-
+        const taskContainer = document.querySelector('.tasks');
+        taskContainer.innerHTML=""
         // Récupère la liste des tâches à l'aide de la fonction fetch()
         const response = await fetch(taskManager.apiEndpoint+'/tasks');
         const responseListTasks = await response.json()
@@ -57,7 +58,8 @@ const taskManager = {
             'submit', taskManager.handleEditForm);
 
         // On insère le HTML de la tâche dans la page
-        document.querySelector('.tasks').append(newTask);
+        const taskContainer = document.querySelector('.tasks');
+        taskContainer.append(newTask);
 
     },
 
@@ -66,17 +68,26 @@ const taskManager = {
      * 
      * @param {Event} event 
      */
-    handleCreateForm: function (event) {
+    handleCreateForm: async function (event) {
         // Bloquer l'envoie du formulaire
         event.preventDefault();
 
         // Récupérer les données du formulaire
         const taskFormData = new FormData(event.currentTarget);
+        console.log(taskFormData);
+        console.log(event.target);
+        console.log(event.currentTarget);
 
         // Envoyer les données à l'API
+        await fetch(taskManager.apiEndpoint+ '/tasks', {
+            method: 'POST',
+            body: taskFormData
+        })
 
         // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;) 
         // en utilisant la valeur de retour de l'API
+
+        taskManager.fetchAndInsertTasksFromApi()
 
     },
 

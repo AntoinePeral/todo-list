@@ -26,6 +26,31 @@ const taskController = {
         }
     },
     updateTask: async function (req,res) {
+        const taskId = Number(req.params.id);
+
+        try {
+            // On cherche la tâche avec le bon ID
+            const task = await Task.findByPk(taskId);
+
+            // Si pas de tâche trouvé alors 404
+            if (!task) {
+                next();
+                return;
+            }
+            // On récupère les données à modifier
+            const name = req.body.name;
+            // On met à jour le model avec les données
+            await task.update({name});
+            // On renvoie la réponse en Json
+            res.json(task)
+
+        } catch (err) {
+            res.status(500).json({
+                statusCode: 500,
+                message: "Server error",
+                fullErrorMessage: err
+            })
+        }
 
     },
     deleteTask: async function (req,res) {
