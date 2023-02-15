@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node-dev --notify=false app.js"
+    "start": "node-dev --notify=false app.js",
+    "dbInit": "psql -U otodo -d otodo -f ./data/table.sql"
   },
   "keywords": [],
   "author": "",
