@@ -9,6 +9,9 @@ const router = require('./app/router');
 const app = express();
 const port = process.env.PORT;
 
+// on précise à notre app qu'on va recevoir du JSON
+app.use(express.json());
+
 // On autorise tout le monde sur notre API
 app.use(cors());
 // On demande à Express d'extraire les données des requêtes POST
