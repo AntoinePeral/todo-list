@@ -84,7 +84,6 @@ const taskManager = {
         })
 
         const newTask = await response.json()
-        console.log(newTask);
 
         // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;) 
         // en utilisant la valeur de retour de l'API
@@ -105,7 +104,6 @@ const taskManager = {
 
         // On récupère l'ID de l'élément à supprimer
         const taskHtmlElement = event.currentTarget.closest('.task');
-        console.log(taskHtmlElement);
         const taskId = taskHtmlElement.dataset.id;
 
         // On envoie la requete de suppression à l'API
@@ -121,7 +119,7 @@ const taskManager = {
         const divNotif = document.createElement('div');
         divNotif.classList.add('notification');
         divNotif.classList.add('is-light');
-        divNotif.classList.add('is-info');
+        divNotif.classList.add('is-success');
         divNotif.innerHTML = `La tâche numéro ${taskId} a bien été supprimé`
         // On lui crée un btn pour pouvoir fermer la notif
         const btnClose = document.createElement('button');
@@ -148,7 +146,6 @@ const taskManager = {
     handleEditButton: function (event) {
         // On récupére l'élément HTML de la tâche à modifier
         const taskHtmlElement = event.currentTarget.closest('.task');
-        console.log(taskHtmlElement);
         // On affiche l'input de modification
         taskHtmlElement.querySelector('.task__edit-form').style.display = 'flex';
         // On masque le titre
@@ -166,7 +163,6 @@ const taskManager = {
 
         // On récupère l'élément HTML complet de la tâche à modifier
         const taskHtmlElement = event.currentTarget.closest('.task');
-        console.log(taskHtmlElement);
 
         // Récupérer les données du formulaire
         const taskFormData = new FormData(event.currentTarget);
@@ -180,7 +176,6 @@ const taskManager = {
             body: taskFormData
         });
         const taskUpdated = await response.json()
-        console.log(taskUpdated)
 
         // Après confirmation de l'API modifier le nom de la tâche dans le span.task__name
         // * Deux façon : 
