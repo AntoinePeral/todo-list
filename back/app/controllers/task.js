@@ -15,8 +15,11 @@ const taskController = {
         console.log(req.body);
 
         try {
+            // On crée un nouveau model en ajoutant la donnée récup
             const task  = await Task.create({name});
+            // Renvoie de la task créée
             res.json(task)
+
         } catch (err) {
             res.status(500).json({
                 statusCode: 500,
@@ -26,6 +29,7 @@ const taskController = {
         }
     },
     updateTask: async function (req,res) {
+        // On recherche l'Id pour identifier la task
         const taskId = Number(req.params.id);
 
         try {
@@ -53,8 +57,26 @@ const taskController = {
         }
 
     },
-    deleteTask: async function (req,res) {
+    deleteTask: async function (req,res, next) {
+        const taskId = Number(req.params.id);
 
+        try {
+            const task = await Task.findByPk(taskId);
+
+            if (!task) {
+                return next()
+            }
+
+            await task.destroy()
+            res.status(204).json({statusCode: 204})
+            
+        } catch (err) {
+            res.status(500).json({
+                statusCode: 500,
+                message: "Server error",
+                fullErrorMessage: err
+            })
+        }
     },
     
 };

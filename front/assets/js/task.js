@@ -74,20 +74,19 @@ const taskManager = {
 
         // Récupérer les données du formulaire
         const taskFormData = new FormData(event.currentTarget);
-        console.log(taskFormData);
-        console.log(event.target);
-        console.log(event.currentTarget);
 
         // Envoyer les données à l'API
-        await fetch(taskManager.apiEndpoint+ '/tasks', {
+        const response = await fetch(taskManager.apiEndpoint+ '/tasks', {
             method: 'POST',
             body: taskFormData
         })
 
+        const newTask = await response.json()
+        console.log(newTask);
+
         // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;) 
         // en utilisant la valeur de retour de l'API
-
-        taskManager.fetchAndInsertTasksFromApi()
+        taskManager.insertTaskInHtml(newTask)
 
     },
 
@@ -96,15 +95,20 @@ const taskManager = {
      * 
      * @param {Event} event 
      */
-    handleDeleteButton: function (event) {
+    handleDeleteButton: async function (event) {
 
         // On récupère l'ID de l'élément à supprimer
         const taskHtmlElement = event.currentTarget.closest('.task');
+        console.log(taskHtmlElement);
         const taskId = taskHtmlElement.dataset.id;
 
         // On envoie la requete de suppression à l'API
+       await fetch(taskManager.apiEndpoint+ '/tasks/'+taskId, {
+            method:'DELETE'
+        })
 
         // On supprime l'élément dans la page HTML
+        taskHtmlElement.remove()
 
     },
 
@@ -116,6 +120,7 @@ const taskManager = {
     handleEditButton: function (event) {
         // On récupére l'élément HTML de la tâche à modifier
         const taskHtmlElement = event.currentTarget.closest('.task');
+        console.log(taskHtmlElement);
         // On affiche l'input de modification
         taskHtmlElement.querySelector('.task__edit-form').style.display = 'flex';
         // On masque le titre
@@ -127,12 +132,13 @@ const taskManager = {
      * 
      * @param {Event} event 
      */
-    handleEditForm: function (event) {
+    handleEditForm: async function (event) {
         // Bloquer l'envoie du formulaire
         event.preventDefault();
 
         // On récupère l'élément HTML complet de la tâche à modifier
         const taskHtmlElement = event.currentTarget.closest('.task');
+        console.log(taskHtmlElement);
 
         // Récupérer les données du formulaire
         const taskFormData = new FormData(event.currentTarget);
@@ -141,9 +147,18 @@ const taskManager = {
         const taskId = taskFormData.get('id');
 
         // Envoyer les données à l'API
-
+        const response = await fetch(taskManager.apiEndpoint+ '/tasks/'+taskId, {
+            method: 'PATCH',
+            body: taskFormData
+        });
+        const taskUpdated = await response.json()
+        console.log(taskUpdated)
 
         // Après confirmation de l'API modifier le nom de la tâche dans le span.task__name
+        // * Deux façon : 
+        // taskHtmlElement.querySelector('span').innerText = taskFormData.get('name')
+        // * ou
+        taskHtmlElement.querySelector('span').innerText = taskUpdated.name
 
         // On affiche l'input de modification
         taskHtmlElement.querySelector('.task__edit-form').style.display = 'none';
