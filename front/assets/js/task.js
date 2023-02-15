@@ -61,6 +61,8 @@ const taskManager = {
         const taskContainer = document.querySelector('.tasks');
         taskContainer.append(newTask);
 
+
+
     },
 
     /**
@@ -87,6 +89,10 @@ const taskManager = {
         // Après confirmation de l'API insérer la tâche dans la page (il y a une fonction toute prete pour ça ;) 
         // en utilisant la valeur de retour de l'API
         taskManager.insertTaskInHtml(newTask)
+
+        // On réinitialise le form après avoir rentrer une tâche
+        // On sélectionne le form et on lui pose un reset
+        event.target.reset()
 
     },
 
